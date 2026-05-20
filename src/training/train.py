@@ -1,5 +1,5 @@
 import lightning as L
-from pytorch_lightning.callbacks import ModelCheckpoint
+from lightning.pytorch.callbacks import ModelCheckpoint
 from lightning.pytorch.loggers import WandbLogger
 from src.models.model import SimpleMLP
 from src.data.datamodule import CustomDataModule
@@ -7,18 +7,33 @@ from src.models.lightning_module import RainfallRegressionModel
 from src.utils.config import load_config
 import argparse
 import os
+import uuid
+import yaml
 
 def main(config):
+    project_dir = os.path.join(config['logging']['base_dir'], config['logging']['project'])
+    os.makedirs(project_dir, exist_ok=True)
+
+    run_id = uuid.uuid4().hex[:8]
+    out_dir = os.path.join(project_dir, run_id)
+    os.makedirs(out_dir, exist_ok=True)
 
     wandb_logger = WandbLogger(
         project=config['logging']['project'],
+        entity=config['logging'].get('entity'),
         name=config['logging'].get('run_name'),
+        id=run_id,
+        version=run_id,
         config=config,
-        save_dir=config['logging']['base_dir']
+        save_dir=out_dir
     )
 
-    run_id = wandb_logger.experiment.id
-    out_dir = f"{config['logging']['base_dir']}/{config['logging']['project']}/{run_id}"
+    print(f"W&B run id: {run_id}")
+    print(f"W&B run url: {wandb_logger.experiment.url}")
+
+    # Persist the exact run config next to logs/checkpoints for reproducibility.
+    with open(os.path.join(out_dir, "config.yaml"), "w") as f:
+        yaml.safe_dump(config, f, sort_keys=False)
 
     datamodule = CustomDataModule(
         data_in_path=config['data']['input_path'],

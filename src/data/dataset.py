@@ -19,7 +19,7 @@ class CustomDataset(Dataset):
 
         self.transform = transform
         self.target_transform = target_transform
-        self.times = self.ds_in.time.values
+        self.times = common_times
 
     def __len__(self):
         # Determines the number of samples in the dataset, which is the length of the time dimension after filtering for common times and splits.
@@ -35,4 +35,5 @@ class CustomDataset(Dataset):
             y = self.target_transform(y)
         x = torch.as_tensor(x, dtype=torch.float32)
         y = torch.as_tensor(y, dtype=torch.float32)
-        return x, y
+        return {"x": x, "y": y, "idx": idx}
+    

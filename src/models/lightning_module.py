@@ -16,7 +16,7 @@ class RainfallRegressionModel(L.LightningModule):
         return self.model(x)   
     
     def training_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch["x"], batch["y"]
         x = x.float()
         y = y.float()
         y_hat = self(x)
@@ -25,7 +25,7 @@ class RainfallRegressionModel(L.LightningModule):
         return loss
     
     def validation_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch["x"], batch["y"]
         x = x.float()
         y = y.float()
         y_hat = self(x)
@@ -49,7 +49,7 @@ class RainfallRegressionModel(L.LightningModule):
         self.log('val_r2', r2, prog_bar=True, logger=True)
     
     def test_step(self, batch, batch_idx):
-        x, y = batch
+        x, y = batch["x"], batch["y"]
         x = x.float()
         y = y.float()
         y_hat = self(x)
@@ -58,9 +58,9 @@ class RainfallRegressionModel(L.LightningModule):
         return loss
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
-        x, _ = batch
+        x, y, time_idx = batch["x"], batch["y"], batch["idx"]
         x = x.float()
-        return self(x)
+        return self(x), y, time_idx
     
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
