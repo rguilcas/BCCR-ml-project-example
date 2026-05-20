@@ -61,7 +61,7 @@ class RainfallRegressionModel(L.LightningModule):
         x, y, time_idx = batch["x"], batch["y"], batch["idx"]
         x = x.float()
         return self(x), y, time_idx
-    
+
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
         return optimizer

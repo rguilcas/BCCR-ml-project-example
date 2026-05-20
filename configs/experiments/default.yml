@@ -1,6 +1,6 @@
 model:
   input_channels: 1
-  hidden_size: 128
+  hidden_size: 32
 
 data:
   input_path: data/raw/msl_data_northatlantic.nc

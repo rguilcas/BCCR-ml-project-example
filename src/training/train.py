@@ -1,6 +1,7 @@
 import lightning as L
-from lightning.pytorch.callbacks import ModelCheckpoint
+from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
 from lightning.pytorch.loggers import WandbLogger
+
 from src.models.model import SimpleMLP
 from src.data.datamodule import CustomDataModule
 from src.models.lightning_module import RainfallRegressionModel
@@ -57,11 +58,17 @@ def main(config):
         mode="min",
     )
 
+    early_stopping_callback = EarlyStopping(
+        monitor="val_loss",
+        patience=5,
+        mode="min"
+    )
+
     trainer = L.Trainer(
         max_epochs=config['trainer']['max_epochs'],
         logger=wandb_logger,
         default_root_dir=out_dir,
-        callbacks=[checkpoint_callback],
+        callbacks=[checkpoint_callback, early_stopping_callback ],
     )
     
     trainer.fit(lightning_model, datamodule=datamodule)
