@@ -1,7 +1,6 @@
 from torch.utils.data import Dataset
 import torch
 import pandas as pd
-import os 
 import xarray as xr
 import numpy as np
 
