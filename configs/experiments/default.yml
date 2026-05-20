@@ -1,0 +1,19 @@
+model:
+  input_channels: 1
+  hidden_size: 128
+
+data:
+  input_path: data/raw/msl_data_northatlantic.nc
+  target_path: data/raw/pr_era5_daily_westnorway_1940-2024.nc
+  batch_size: 32
+
+trainer:
+  max_epochs: 20
+  learning_rate: 0.0001
+  accelerator: gpu
+  devices: 1
+
+logging:
+  project: bccr-ml-course
+  run_name: baseline
+  base_dir: outputs
