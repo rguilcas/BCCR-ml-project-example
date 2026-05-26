@@ -4,11 +4,12 @@ import torch
 from sklearn.metrics import r2_score
 
 class RainfallRegressionModel(L.LightningModule):
-    def __init__(self, model, learning_rate=1e-3):
+    def __init__(self, model, learning_rate=1e-3, target_inverse_transform=None):
         super().__init__()
         self.model = model
         self.criterion = nn.MSELoss()
         self.learning_rate = learning_rate
+        self.target_inverse_transform = target_inverse_transform
         self.val_preds = []
         self.val_targets = []
 
@@ -21,7 +22,8 @@ class RainfallRegressionModel(L.LightningModule):
         y = y.float()
         y_hat = self(x)
         loss = self.criterion(y_hat, y)
-        self.log('train_loss', loss)
+        # Log epoch-level mean to avoid noisy last-batch values dominating charts.
+        self.log('train_loss', loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
         return loss
     
     def validation_step(self, batch, batch_idx):
@@ -45,6 +47,9 @@ class RainfallRegressionModel(L.LightningModule):
             return
         y_pred = torch.cat(self.val_preds, dim=0)
         y_true = torch.cat(self.val_targets, dim=0)
+        if self.target_inverse_transform is not None:
+            y_pred = self.target_inverse_transform(y_pred)
+            y_true = self.target_inverse_transform(y_true)
         r2 = r2_score(y_true.cpu().numpy(), y_pred.cpu().numpy())
         self.log('val_r2', r2, prog_bar=True, logger=True)
     

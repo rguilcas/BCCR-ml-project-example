@@ -1,11 +1,12 @@
 model:
+  model_name: TwoLayerMLP
   input_channels: 1
   hidden_size: 32
 
 data:
-  input_path: data/raw/msl_data_northatlantic.nc
-  target_path: data/raw/pr_era5_daily_westnorway_1940-2024.nc
-  batch_size: 32
+  data_in_name: msl_data.nc
+  data_out_name: pr_era5_daily_westnorway_1940-2024.nc
+  batch_size: 128
 
 trainer:
   max_epochs: 20

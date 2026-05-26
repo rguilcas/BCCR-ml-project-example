@@ -7,8 +7,9 @@ import torch
 import numpy as np
 from src.data.datamodule import CustomDataModule
 from src.models.lightning_module import RainfallRegressionModel
-from src.models.model import SimpleMLP
+import src.models.models as models
 from src.utils.config import load_config
+import inspect
 
 
 def predict(config, checkpoint_path, output_path):
@@ -18,12 +19,18 @@ def predict(config, checkpoint_path, output_path):
 		batch_size=config["data"]["batch_size"],
 	)
 	# Setup for correct split
-	image_size = datamodule.image_shape[1] * datamodule.image_shape[2]
-	model = SimpleMLP(
-		input_size=image_size,
-		hidden_size=config["model"]["hidden_size"],
-		target_size=1,
-	)
+	image_size = datamodule.image_shape[1] * datamodule.image_shape[2]    
+	model_name = config['model']['model_name']
+	model_class = models.__dict__[model_name]
+	model_config = {**config['model'], 'input_size': image_size, 'target_size': 1}
+	constructor_params = inspect.signature(model_class.__init__).parameters
+	allowed_kwargs = {
+        name: value
+        for name, value in model_config.items()
+        if name in constructor_params and name != 'self'
+		}
+	model = model_class(**allowed_kwargs)
+    
 
 	lightning_model = RainfallRegressionModel.load_from_checkpoint(
 		checkpoint_path,
