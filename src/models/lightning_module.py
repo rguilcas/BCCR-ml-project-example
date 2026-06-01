@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch
 from sklearn.metrics import r2_score
 
-class RainfallRegressionModel(L.LightningModule):
+class RegressionModel(L.LightningModule):
     def __init__(self, model, learning_rate=1e-3, target_inverse_transform=None):
         super().__init__()
         self.model = model
@@ -12,6 +12,8 @@ class RainfallRegressionModel(L.LightningModule):
         self.target_inverse_transform = target_inverse_transform
         self.val_preds = []
         self.val_targets = []
+        self.final_val_preds = None
+        self.final_val_targets = None
 
     def forward(self, x):
         return self.model(x)   
@@ -34,7 +36,7 @@ class RainfallRegressionModel(L.LightningModule):
         loss = self.criterion(y_hat, y)
         self.val_preds.append(y_hat.detach())
         self.val_targets.append(y.detach())
-        self.log('val_loss', loss, on_step=False, on_epoch=True, prog_bar=True, logger=True)
+        self.log('val_loss', loss, on_step=False, on_epoch=True, prog_bar=False, logger=True)
         return loss
 
 
@@ -50,9 +52,13 @@ class RainfallRegressionModel(L.LightningModule):
         if self.target_inverse_transform is not None:
             y_pred = self.target_inverse_transform(y_pred)
             y_true = self.target_inverse_transform(y_true)
+
+        self.final_val_preds = y_pred.detach().cpu()
+        self.final_val_targets = y_true.detach().cpu()
+
         r2 = r2_score(y_true.cpu().numpy(), y_pred.cpu().numpy())
-        self.log('val_r2', r2, prog_bar=True, logger=True)
-    
+        self.log("val_r2", r2, prog_bar=True, logger=True)
+
     def test_step(self, batch, batch_idx):
         x, y = batch["x"], batch["y"]
         x = x.float()
@@ -70,4 +76,3 @@ class RainfallRegressionModel(L.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.AdamW(self.parameters(), lr=self.learning_rate)
         return optimizer
-    

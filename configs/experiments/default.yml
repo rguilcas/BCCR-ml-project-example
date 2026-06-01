@@ -1,15 +1,20 @@
 model:
-  model_name: TwoLayerMLP
+  model_name: TwoLayerCNN
   input_channels: 1
-  hidden_size: 32
+  hidden_size_mlp: 32
+  n_kernels_cnn: 8
+  n_channels_input_cnn: 1
 
 data:
   data_in_name: msl_data.nc
-  data_out_name: pr_era5_daily_westnorway_1940-2024.nc
+  data_target_name: pr_era5_daily_westnorway_1940-2024.nc
+  data_path: './data/raw'
   batch_size: 128
+  transform_X: StandardScalerX
+  transform_y: None
 
 trainer:
-  max_epochs: 20
+  max_epochs: 100
   learning_rate: 0.0001
   accelerator: gpu
   devices: 1
