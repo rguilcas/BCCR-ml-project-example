@@ -14,8 +14,8 @@ data:
   transform_y: None
 
 trainer:
-  max_epochs: 100
-  learning_rate: 0.0001
+  max_epochs: 20
+  learning_rate: 0.001
   accelerator: gpu
   devices: 1
 
