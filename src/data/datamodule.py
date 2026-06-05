@@ -6,22 +6,27 @@ The DataModule also applies the specified transformations to the input features 
 """
 
 import os
-import lightning as L
 import torch
+
+import lightning as L
 import xarray as xr
 import numpy as np
 from torch.utils.data import DataLoader
+
 from src.data.dataset import AtmosphereToRainfallDataset
 
 random_seed = 42
 
 class MyDataModule(L.LightningDataModule):
-    # Data splitting, we keep a sequential split now, but we can choose to shuffle them.
     def __init__(self, data_in_name, data_target_name, 
                  data_path='./data',
                  batch_size=32,
                  years_split = [('1979','2008'), ('2009','2014'), ('2015','2024')],
                  transform_X=None, transform_y=None):
+        """
+        Initializes the MyDataModule with the specified parameters. 
+        It takes the names of the input and target data files, the path to the data directory, batch size, years for train/validation/test splits, and any transformations to apply to the input features and target variable.
+        """
         super().__init__()
         self.data_in_name = data_in_name
         self.data_target_name = data_target_name
@@ -36,8 +41,13 @@ class MyDataModule(L.LightningDataModule):
         self.image_size = int(np.prod(self.image_shape[-2:]))
 
     def setup(self, stage='fit'):
+        """
+        This method is called by PyTorch Lightning to set up the datasets for training, validation, testing, and prediction.
+        It creates the appropriate datasets for each phase, applies the specified transformations, and fits the transformations on the training data if they haven't been fitted yet.
+        """
         # Training phase
         if stage == 'fit':
+            # Data splitting, we keep a sequential split now for train/validation/test, but we can choose to shuffle them here.
             self.dataset_train = AtmosphereToRainfallDataset(
                 self.data_in_name, 
                 self.data_target_name, 
@@ -77,15 +87,33 @@ class MyDataModule(L.LightningDataModule):
         
 
     def train_dataloader(self):
+        """
+        Returns the DataLoader for the training dataset. The training data is shuffled to ensure that the model does not learn any spurious patterns from the order of the data.
+        This is used when running trainer.fit().
+        """
         # We still shuffle the training data.
         return DataLoader(self.dataset_train, batch_size=self.batch_size, shuffle=True, generator=torch.Generator().manual_seed(random_seed))
     
     def val_dataloader(self):
+        """
+        Returns the DataLoader for the validation dataset. The validation data is not shuffled.
+        This is used when running trainer.fit().
+        """
         return DataLoader(self.dataset_val, batch_size=self.batch_size)
 
     def test_dataloader(self):
+        """
+        Returns the DataLoader for the testing dataset. The testing data is not shuffled.
+        This is used when running trainer.test().
+        """
         return DataLoader(self.dataset_test, batch_size=self.batch_size)
 
     def predict_dataloader(self):
+        """
+        Returns the DataLoader for the full dataset used for prediction.  
+        This is used when running trainer.predict().
+        The data is not shuffled to maintain the original order for analysis.
+        We could choose to have other datasets for prediction, for example, we could have a dataset for future years that we want to predict on, but here we just use the full dataset.
+        """
         return DataLoader(self.dataset_full, batch_size=self.batch_size)
     

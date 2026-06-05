@@ -22,7 +22,7 @@ data:
 
 trainer:
   max_epochs: 20          # Number of epochs to train the model.
-  learning_rate: 0.001    # Learning rate for the optimizer.
+  learning_rate: 0.0001   # Learning rate for the optimizer.
   accelerator: gpu        # Accelerator to use for training. Can be 'cpu', 'gpu', or other things.  
   devices: 1              # Number of devices to use for training. For example, if you have 2 GPUs and want to use both, set this to 2.
 
