@@ -1,6 +1,6 @@
 # BCCR Training Programme in Machine Learning
+## Setup your ML workflow
 ---
-_Setup your ML workflow_
 
 This repository is an example machine learning project.
 
