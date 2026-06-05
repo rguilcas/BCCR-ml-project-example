@@ -18,7 +18,9 @@ class StandardScalerX:
     def __call__(self, x):
         if not self.fitted:
             raise RuntimeError("Scaler not fitted")
-        return (x - self.meanX) / self.stdX
+        mean_x = self.meanX.to(device=x.device, dtype=x.dtype)
+        std_x = self.stdX.to(device=x.device, dtype=x.dtype)
+        return (x - mean_x) / std_x
 
 
 
@@ -38,21 +40,21 @@ class MinMaxScalerY:
     def inverse_transform(self, y):
         if not self.fitted:
             raise RuntimeError("Scaler not fitted")
-        return y * (self.maxY - self.minY + self.eps) + self.minY
+        max_y = self.maxY.to(device=y.device, dtype=y.dtype)
+        min_y = self.minY.to(device=y.device, dtype=y.dtype)
+        return y * (max_y - min_y + self.eps) + min_y
 
     def __call__(self, y):
         if not self.fitted:
             raise RuntimeError("Scaler not fitted")
-        return (y - self.minY) / (self.maxY - self.minY + self.eps)
+        max_y = self.maxY.to(device=y.device, dtype=y.dtype)
+        min_y = self.minY.to(device=y.device, dtype=y.dtype)
+        return (y - min_y) / (max_y - min_y + self.eps)
     
 
 class Log1pY:
     def __init__(self, eps=1e-6):
         self.fitted = True
-
-    def fit(self, dataset):
-        pass
-
     def inverse_transform(self, y):
         return torch.expm1(y)
     def __call__(self, y):
