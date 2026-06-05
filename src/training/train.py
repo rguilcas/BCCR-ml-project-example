@@ -106,8 +106,10 @@ def main(config):
         # We save checkpoints in the output directory for this run, and monitor the validation loss to save the best model and stop training if it does not improve for a certain number of epochs.
         callbacks=[
             ModelCheckpoint(dirpath=os.path.join(out_dir, "checkpoints"), 
+                            filename="best",
                             save_top_k=1, 
-                            monitor="val_loss"),
+                            monitor="val_loss",
+                            mode="min"),
             EarlyStopping(monitor="val_loss", patience=5, mode='min'),
         ],
     )

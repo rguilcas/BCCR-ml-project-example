@@ -86,6 +86,9 @@ def main(config, checkpoint_path, output_path):
 	targets = torch.cat([batch[1].detach().cpu() for batch in prediction_batches], dim=0)
 	time_indices = torch.cat([batch[2].detach().cpu() for batch in prediction_batches], dim=0).numpy()
 	
+	# If the prediction is negative, set it to 0, since rainfall cannot be negative.
+	preds = torch.clamp(preds, min=0.0)
+	
 	# Get the actual times of the predictions if data have been shuffled.
 	times = datamodule.dataset_predict.times[time_indices]
 	
@@ -153,6 +156,8 @@ if __name__ == "__main__":
 	config_path = f"outputs/{args.project_root}/{args.run_id}/config.yaml"
 	checkpoint_path = f"outputs/{args.project_root}/{args.run_id}/checkpoints/{args.checkpoint_name}"
 	run_output_dir = Path(f"outputs/{args.project_root}/{args.run_id}")
+	checkpoint_file = Path(checkpoint_path)
+	checkpoint_path = str(checkpoint_file)
 	if args.output is None:
 		args.output = str(run_output_dir / "predictions.csv")
 	# Load configuration file
