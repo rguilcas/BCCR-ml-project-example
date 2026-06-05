@@ -8,7 +8,7 @@ model:
 data:
   data_in_name: msl_data.nc
   data_target_name: pr_era5_daily_westnorway_1940-2024.nc
-  data_path: './data/raw'
+  data_path: './data'
   batch_size: 128
   transform_X: StandardScalerX
   transform_y: None

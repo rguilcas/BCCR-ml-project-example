@@ -3,15 +3,15 @@ import lightning as L
 import torch
 import xarray as xr
 import numpy as np
-from torch.utils.data import random_split, DataLoader, Subset
+from torch.utils.data import DataLoader
 from src.data.dataset import AtmosphereToRainfallDataset
 
 random_seed = 42
 
 class MyDataModule(L.LightningDataModule):
-        # Data splitting, we keep a sequential split now, but we can choose to shuffle them.
+    # Data splitting, we keep a sequential split now, but we can choose to shuffle them.
     def __init__(self, data_in_name, data_target_name, 
-                 data_path='./data/raw',
+                 data_path='./data',
                  batch_size=32,
                  years_split = [('1979','2008'), ('2009','2014'), ('2015','2024')],
                  transform_X=None, transform_y=None):
@@ -81,3 +81,4 @@ class MyDataModule(L.LightningDataModule):
 
     def predict_dataloader(self):
         return DataLoader(self.dataset_full, batch_size=self.batch_size)
+    
