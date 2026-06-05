@@ -1,16 +1,12 @@
 import lightning as L
 from lightning.pytorch.loggers import WandbLogger
+from lightning.pytorch.callbacks import Callback, EarlyStopping, ModelCheckpoint
 
 import src.models.models as models
 from src.data.datamodule import MyDataModule
 from src.models.lightning_module import RegressionModel
 from src.utils.config import load_config
 from src.data import transforms 
-from src.training.callbacks import (
-    get_checkpoint_callback,
-    get_early_stopping_callback,
-    get_validation_plots_callback,
-)
 
 import argparse
 import os
@@ -95,9 +91,10 @@ def main(config):
         logger=wandb_logger,
         default_root_dir=out_dir,
         callbacks=[
-            get_checkpoint_callback(out_dir),
-            get_early_stopping_callback(),
-            # get_validation_plots_callback(),
+            ModelCheckpoint(dirpath=os.path.join(out_dir, "checkpoints"), 
+                            save_top_k=1, 
+                            monitor="val_loss"),
+            EarlyStopping(monitor="val_loss", patience=5, mode='min'),
         ],
     )
     
