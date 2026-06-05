@@ -1,5 +1,4 @@
 import lightning as L
-from lightning.pytorch.callbacks import ModelCheckpoint, EarlyStopping
 from lightning.pytorch.loggers import WandbLogger
 
 import src.models.models as models
@@ -39,7 +38,7 @@ def main(config):
     print(f"W&B run id: {run_id}")
     print(f"W&B run url: {wandb_logger.experiment.url}")
 
-    # Same config file for reproducibility
+    # Save config file for reproducibility
     with open(os.path.join(out_dir, "config.yaml"), "w") as f:
         yaml.safe_dump(config, f, sort_keys=False)
 
@@ -63,22 +62,20 @@ def main(config):
         transform_y=transform_y,
     )
     
-    model_class = getattr(models, config['model']['model_name'])
-
-
-    # Defines kwargs that need to be passed to the model constructor.
-    model_config = {**config['model'], 
-                    'image_size': datamodule.image_size, 
-                    'n_channels_input_cnn': config['model']['n_channels_input_cnn'],
-                    'input_size': datamodule.image_size*config['model']['n_channels_input_cnn'],
-                    'target_size': 1,
-                    }
+    model_class = getattr(models, config["model"]["model_name"])
+    model_config = {
+		**config["model"],
+		"image_size": datamodule.image_size,
+		"n_channels_input_cnn": config["model"]["n_channels_input_cnn"],
+		"input_size": datamodule.image_size * config["model"]["n_channels_input_cnn"],
+		"target_size": 1,
+	}
     constructor_params = inspect.signature(model_class.__init__).parameters
     allowed_kwargs = {
-        name: value
-        for name, value in model_config.items()
-        if name in constructor_params and name != 'self'
-    }
+		name: value
+		for name, value in model_config.items()
+		if name in constructor_params and name != "self"
+	}
     neural_network = model_class(**allowed_kwargs)
 
     target_inverse_transform = None
@@ -93,6 +90,8 @@ def main(config):
 
     trainer = L.Trainer(
         max_epochs=config['trainer']['max_epochs'],
+        accelerator=config['trainer']['accelerator'],
+        devices=config['trainer']['devices'],
         logger=wandb_logger,
         default_root_dir=out_dir,
         callbacks=[

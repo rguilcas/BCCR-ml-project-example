@@ -1,8 +1,8 @@
 import torch.nn as nn
 
-class OneLayerMLP(nn.Module):
+class OneHiddenLayerMLP(nn.Module):
     def __init__(self, input_size, hidden_size_mlp, target_size):
-        super(OneLayerMLP, self).__init__()
+        super(OneHiddenLayerMLP, self).__init__()
         self.flatten = nn.Flatten()
         self.relu = nn.ReLU()
         self.fc1 = nn.Linear(input_size, hidden_size_mlp)
@@ -15,9 +15,9 @@ class OneLayerMLP(nn.Module):
         out = self.fc2(out)
         return out
 
-class TwoLayerMLP(nn.Module):
+class TwoHiddenLayerMLP(nn.Module):
     def __init__(self, input_size, hidden_size_mlp, target_size):
-        super(TwoLayerMLP, self).__init__()
+        super(TwoHiddenLayerMLP, self).__init__()
         self.flatten = nn.Flatten()
         self.relu = nn.ReLU()
         self.fc1 = nn.Linear(input_size, hidden_size_mlp)
