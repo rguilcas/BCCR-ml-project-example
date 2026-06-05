@@ -1,3 +1,8 @@
+"""
+File documentation:
+This file defines a utility function for loading configuration files in YAML format.
+"""
+
 import yaml
 
 def load_config(path):

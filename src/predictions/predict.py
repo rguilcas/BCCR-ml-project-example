@@ -1,3 +1,11 @@
+"""
+File documentation:
+This file is the main prediction script that generates predictions from a trained model checkpoint.
+It loads the model checkpoint, applies the necessary data transformations, and generates predictions on the full dataset
+The predictions are then saved to a CSV file for further analysis.
+"""
+
+
 import argparse
 import inspect
 from pathlib import Path

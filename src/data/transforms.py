@@ -1,3 +1,8 @@
+"""
+File documentation:
+This file defines custom data transformations for preprocessing the dataset.
+"""
+
 import torch
 
 class StandardScalerX:

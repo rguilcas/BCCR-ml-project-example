@@ -1,5 +1,11 @@
-import os
+"""
+File documentation:
+This file defines a custom PyTorch Dataset called AtmosphereToRainfallDataset , which is used for loading and preprocessing the dataset.
+The dataset loads atmospheric predictor variables and rainfall target variables from NetCDF files using xarray.
+It also applies any specified transformations to the input features and target variable.
+"""
 
+import os
 from torch.utils.data import Dataset
 import torch
 import pandas as pd

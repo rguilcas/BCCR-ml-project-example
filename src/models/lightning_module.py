@@ -1,3 +1,10 @@
+"""
+File documentation:
+This file defines the RegressionModel class, which is a PyTorch LightningModule for training a regression model.
+The model takes a neural network as input and defines the training, validation, testing, and prediction steps.
+The module also computes the R2 score on the validation set at the end of each epoch.
+"""
+
 import lightning as L
 import torch.nn as nn
 import torch

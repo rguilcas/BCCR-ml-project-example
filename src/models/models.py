@@ -1,3 +1,10 @@
+"""
+File documentation:
+This file defines the neural network architectures for the regression model.
+It includes a simple one-hidden-layer MLP, a two-hidden-layer MLP, and a two-layer CNN.
+The MLPs are fully connected feedforward networks, while the CNN is designed to capture spatial patterns in the input data, which is useful for the atmospheric predictor variables that have a spatial structure.
+"""
+
 import torch.nn as nn
 
 class OneHiddenLayerMLP(nn.Module):

@@ -1,3 +1,10 @@
+"""
+File documentation:
+This file defines the MyDataModule class, which is a PyTorch Lightning DataModule for loading and preprocessing the dataset. 
+It handles the data loading for training, validation, testing, and prediction phases. 
+The DataModule also applies the specified transformations to the input features and target variable, fitting the transformations on the training data.
+"""
+
 import os
 import lightning as L
 import torch

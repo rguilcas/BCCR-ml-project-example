@@ -1,6 +1,12 @@
+"""
+File documentation:
+This file is the main training script that trains a model following the given configuration file. 
+It loads the configuration from a YAML file, initializes the model and data loaders, and starts the training process.
+"""
+
 import lightning as L
 from lightning.pytorch.loggers import WandbLogger
-from lightning.pytorch.callbacks import Callback, EarlyStopping, ModelCheckpoint
+from lightning.pytorch.callbacks import EarlyStopping, ModelCheckpoint
 
 import src.models.models as models
 from src.data.datamodule import MyDataModule

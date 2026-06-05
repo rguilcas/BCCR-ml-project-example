@@ -1,5 +1,12 @@
 #!/usr/bin/env bash
 
+# --- File Documentation ---
+# This file makes predictions with a trained model. 
+# It loads the model checkpoint from a specified training run, applies the necessary data transformations, and generates predictions on the full dataset. 
+# The predictions are then saved to a CSV file for further analysis.
+# --------------------------
+
+
 # Exit on error
 set -e
 
