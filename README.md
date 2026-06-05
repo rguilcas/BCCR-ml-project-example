@@ -32,7 +32,11 @@ bash predict.sh --run-id run-id
 ```
 
 
-## If running on HubroHub
+## SETUP If running on HubroHub
+
+
+
+### 1) Install missing libraries
 
 If you are running this on HubroHub, you need to install lightning and wandb everytime you open a new session:
 
@@ -40,7 +44,15 @@ If you are running this on HubroHub, you need to install lightning and wandb eve
 pip install wandb lightning
 ```
 
-## If running elsewhere: Reproducible Environment (macOS, Linux, Windows)
+### 2) Setup weights and biases
+
+Once all libraries are installed, login to weights and biases to make sure experiments will get logged properly to your account.
+You will need a weights and biases account: [](https://wandb.ai/). Then copy your API key and past it in the terminal when asked.
+
+```bash
+wandb login
+
+## SETUP If running elsewhere: Reproducible Environment (macOS, Linux, Windows)
 
 This project uses a two-step setup:
 
@@ -82,7 +94,7 @@ python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is
 
 ### 5) Setup weights and biases
 
-Once the environment is activate, login to weights and biases to make sure experiments will get logged properly to your account.
+Once the environment is activated, login to weights and biases to make sure experiments will get logged properly to your account.
 You will need a weights and biases account. Then copy your API key and past it in the terminal when asked.
 
 ```bash
