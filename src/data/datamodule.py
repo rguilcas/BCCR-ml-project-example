@@ -40,6 +40,33 @@ class MyDataModule(L.LightningDataModule):
             self.image_shape = tuple(da.isel(time=0).shape)
         self.image_size = int(np.prod(self.image_shape[-2:]))
 
+    def _ensure_transforms_fitted(self):
+        """
+        Helper function that ensures that transforms are fitted on the training split.
+        This is needed for test/predict-only workflows that skip trainer.fit().
+        """
+        if self._transforms_fitted:
+            return
+
+        x_fitted = self.transform_X is None or getattr(self.transform_X, "fitted", False)
+        y_fitted = self.transform_y is None or getattr(self.transform_y, "fitted", False)
+        if x_fitted and y_fitted:
+            self._transforms_fitted = True
+            return
+
+        print("Fitting transforms on the training data...")
+        dataset_train_for_fit = AtmosphereToRainfallDataset(
+            self.data_in_name,
+            self.data_target_name,
+            data_path=self.data_path,
+            time_slice=self.train_years,
+        )
+        if self.transform_X is not None and not getattr(self.transform_X, "fitted", False):
+            self.transform_X.fit(dataset_train_for_fit)
+        if self.transform_y is not None and not getattr(self.transform_y, "fitted", False):
+            self.transform_y.fit(dataset_train_for_fit)
+        self._transforms_fitted = True
+
     def setup(self, stage='fit'):
         """
         This method is called by PyTorch Lightning to set up the datasets for training, validation, testing, and prediction.
@@ -58,13 +85,8 @@ class MyDataModule(L.LightningDataModule):
                 self.data_target_name, 
                 data_path=self.data_path,
                 time_slice=self.val_years)
-            # Data preprocessing, we fit the transforms on the training data and then apply them to train, val and test. 
-            if not self._transforms_fitted:
-                if self.transform_X is not None:
-                    self.transform_X.fit(self.dataset_train)
-                if self.transform_y is not None:
-                    self.transform_y.fit(self.dataset_train)
-                self._transforms_fitted = True
+            # Data preprocessing: fit on train split once and reuse for all stages.
+            self._ensure_transforms_fitted()
             self.dataset_train.transform_X = self.transform_X
             self.dataset_val.transform_X = self.transform_X
             self.dataset_train.transform_y = self.transform_y
@@ -72,18 +94,17 @@ class MyDataModule(L.LightningDataModule):
             
         # Testing phase
         if stage == 'test':
+            self._ensure_transforms_fitted()
             self.dataset_test = AtmosphereToRainfallDataset(self.data_in_name, self.data_target_name, 
-                                                            data_path=self.data_path,time_slice=self.test_years)
-            self.dataset_test.transform_X = self.transform_X
-            self.dataset_test.transform_y = self.transform_y
+                                                            data_path=self.data_path, time_slice=self.test_years,
+                                                            transform_X = self.transform_X, transform_y = self.transform_y)
         
         # Prediction phase
         if stage == 'predict':
-            self.dataset_full = AtmosphereToRainfallDataset(self.data_in_name, self.data_target_name, 
-                                                         data_path=self.data_path)
-            self.dataset_full.transform_X = self.transform_X
-            self.dataset_full.transform_y = self.transform_y
-        
+            self._ensure_transforms_fitted()
+            self.dataset_predict = AtmosphereToRainfallDataset(self.data_in_name, self.data_target_name, 
+                                                            data_path=self.data_path, time_slice = (None, None),
+                                                            transform_X = self.transform_X, transform_y = self.transform_y)
         
 
     def train_dataloader(self):
@@ -115,5 +136,5 @@ class MyDataModule(L.LightningDataModule):
         The data is not shuffled to maintain the original order for analysis.
         We could choose to have other datasets for prediction, for example, we could have a dataset for future years that we want to predict on, but here we just use the full dataset.
         """
-        return DataLoader(self.dataset_full, batch_size=self.batch_size)
+        return DataLoader(self.dataset_predict, batch_size=self.batch_size)
     
