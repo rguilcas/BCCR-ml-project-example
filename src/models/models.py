@@ -8,6 +8,10 @@ The MLPs are fully connected feedforward networks, while the CNN is designed to 
 import torch.nn as nn
 
 class OneHiddenLayerMLP(nn.Module):
+    """
+    This neural network architecture consists of a single hidden layer with ReLU activation.
+    The input is first flattened, then passed through a fully connected layer, followed by a ReLU activation, and finally through another fully connected layer to produce the output.
+    """
     def __init__(self, input_size, hidden_size_mlp, target_size):
         super(OneHiddenLayerMLP, self).__init__()
         self.flatten = nn.Flatten()
@@ -23,6 +27,10 @@ class OneHiddenLayerMLP(nn.Module):
         return out
 
 class TwoHiddenLayerMLP(nn.Module):
+    """
+    This neural network architecture consists of two hidden layers with ReLU activation.
+    The input is first flattened, then passed through the first fully connected layer, followed by a ReLU activation, then through the second fully connected layer, followed by another ReLU activation, and finally through the third fully connected layer to produce the output.
+    """
     def __init__(self, input_size, hidden_size_mlp, target_size):
         super(TwoHiddenLayerMLP, self).__init__()
         self.flatten = nn.Flatten()
@@ -41,6 +49,12 @@ class TwoHiddenLayerMLP(nn.Module):
         return out
     
 class TwoLayerCNN(nn.Module):
+    """
+    This neural network architecture consists of two convolutional layers followed by a fully connected prediction head.
+    The convolutional layers are designed to capture spatial patterns in the input data, which is useful for the atmospheric predictor variables that have a spatial structure.
+    The input is passed through two convolutional blocks, each consisting of a convolutional layer, a ReLU activation, and a max pooling layer. 
+    The output of the convolutional layers is then flattened and passed through a fully connected prediction head to produce the final output.
+    """
     def __init__(self, n_channels_input_cnn, target_size, image_size,
                  n_kernels_cnn=8, hidden_size_mlp=64):
         super(TwoLayerCNN, self).__init__()
