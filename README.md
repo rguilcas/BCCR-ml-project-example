@@ -4,14 +4,43 @@
 
 This repository is an example machine learning project.
 
+
+## Train the neural network and make predictions.
+
+First navigate to the scripts/ directory:
+
+```bash
+cd scripts
+```
+
+Then, launch the train.sh script:
+
+```bash
+bash train.sh
+```
+
+You can specify a configuration file in config/ with 
+
+```bash
+bash train.sh --config config-file-name
+```
+
+Weights and biases will give a run ID, which you can reuse for the predictions:
+
+```bash
+bash predict.sh --run-id run-id
+```
+
+
 ## If running on HubroHub
 
 If you are running this on HubroHub, you need to install lightning and wandb everytime you open a new session:
+
 ```bash
 pip install wandb lightning
 ```
 
-## Reproducible Environment (macOS, Linux, Windows)
+## If running elsewhere: Reproducible Environment (macOS, Linux, Windows)
 
 This project uses a two-step setup:
 
@@ -51,7 +80,7 @@ conda activate bccr-ml-project
 python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available(), 'mps', torch.backends.mps.is_available())"
 ```
 
-### 4) Setup weights and biases
+### 5) Setup weights and biases
 
 Once the environment is activate, login to weights and biases to make sure experiments will get logged properly to your account.
 You will need a weights and biases account. Then copy your API key and past it in the terminal when asked.
