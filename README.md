@@ -2,9 +2,14 @@
 ---
 _Setup your ML workflow_
 
-
 This repository is an example machine learning project.
 
+## If running on HubroHub
+
+If you are running this on HubroHub, you need to install lightning and wandb everytime you open a new session:
+```bash
+pip install wandb lightning
+```
 
 ## Reproducible Environment (macOS, Linux, Windows)
 
@@ -22,37 +27,34 @@ conda env create -f extras/environment.yml || conda env update -f extras/environ
 ### 2) Install PyTorch backend
 
 ```bash
-bash scripts/setup_pytorch_backend.sh --backend auto
+bash extras/setup_pytorch_backend.sh --backend auto
 ```
 
 Optional explicit backend selection:
 
 ```bash
-bash scripts/setup_pytorch_backend.sh --backend cuda --cuda-version 12.1
-bash scripts/setup_pytorch_backend.sh --backend mps
-bash scripts/setup_pytorch_backend.sh --backend cpu
+bash extras/setup_pytorch_backend.sh --backend cuda --cuda-version 12.1
+bash extras/setup_pytorch_backend.sh --backend mps
+bash extras/setup_pytorch_backend.sh --backend cpu
 ```
 
-### 3) Verify backend
+### 3) Activate environment
 
 ```bash
-conda run -n bccr-ml-project python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available(), 'mps', torch.backends.mps.is_available())"
+conda activate bccr-ml-project
 ```
 
-### Fully reproducible lock files (recommended for team usage)
 
-Install conda-lock and generate platform-specific lock files:
+### 4) Check torch installation on gpu
 
 ```bash
-pip install conda-lock
-conda-lock -f extras/environment.yml -p osx-arm64 -p osx-64 -p linux-64 -p win-64
+python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available(), 'mps', torch.backends.mps.is_available())"
 ```
 
-Then create environments from lock files on each platform for maximum reproducibility.
+### 4) Setup weights and biases
 
-### Setup weights and biases
-
-Login to weights and biases to make sure experiments will get logged properly to your account.
+Once the environment is activate, login to weights and biases to make sure experiments will get logged properly to your account.
+You will need a weights and biases account. Then copy your API key and past it in the terminal when asked.
 
 ```bash
 wandb login
