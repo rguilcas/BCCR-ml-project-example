@@ -58,11 +58,11 @@ fi
 echo "Installing PyTorch backend '$BACKEND' in conda env '$ENV_NAME'..."
 
 if [[ "$BACKEND" == "cuda" ]]; then
-    conda install -n "$ENV_NAME" -y pytorch torchvision torchaudio pytorch-cuda="$CUDA_VERSION" -c pytorch -c nvidia
+    conda install -n "$ENV_NAME" -y pytorch pytorch-cuda="$CUDA_VERSION" -c pytorch -c nvidia
 elif [[ "$BACKEND" == "mps" ]]; then
-    conda install -n "$ENV_NAME" -y pytorch torchvision torchaudio -c pytorch
+    conda install -n "$ENV_NAME" -y pytorch -c pytorch
 elif [[ "$BACKEND" == "cpu" ]]; then
-    conda install -n "$ENV_NAME" -y pytorch torchvision torchaudio cpuonly -c pytorch
+    conda install -n "$ENV_NAME" -y pytorch cpuonly -c pytorch
 else
     echo "Invalid backend: $BACKEND"
     echo "Valid values: auto, cuda, mps, cpu"
