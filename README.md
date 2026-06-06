@@ -51,6 +51,7 @@ You will need a weights and biases account: [](https://wandb.ai/). Then copy you
 
 ```bash
 wandb login
+```
 
 ## SETUP If running elsewhere: Reproducible Environment (macOS, Linux, Windows)
 
