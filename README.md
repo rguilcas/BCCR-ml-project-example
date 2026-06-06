@@ -66,34 +66,32 @@ This project uses a two-step setup:
 conda env create -f extras/environment.yml || conda env update -f extras/environment.yml --prune
 ```
 
-### 2) Install PyTorch backend
+
+### 2) Activate environment
+
+```bash
+conda activate bccr-ml-project
+```
+
+### 3) Install PyTorch backend
+
+You can use the following bash script that will install pytorch with conda. 
 
 ```bash
 bash extras/setup_pytorch_backend.sh --backend auto
 ```
+You can also go to pytorch website and follow instructions to install pytorch with pip [](https://pytorch.org/get-started/locally/) 
 
+<!-- 
 Optional explicit backend selection:
 
 ```bash
 bash extras/setup_pytorch_backend.sh --backend cuda --cuda-version 12.1
 bash extras/setup_pytorch_backend.sh --backend mps
 bash extras/setup_pytorch_backend.sh --backend cpu
-```
+``` -->
 
-### 3) Activate environment
-
-```bash
-conda activate bccr-ml-project
-```
-
-
-### 4) Check torch installation on gpu
-
-```bash
-python -c "import torch; print('torch', torch.__version__, 'cuda', torch.cuda.is_available(), 'mps', torch.backends.mps.is_available())"
-```
-
-### 5) Setup weights and biases
+### 4) Setup weights and biases
 
 Once the environment is activated, login to weights and biases to make sure experiments will get logged properly to your account.
 You will need a weights and biases account. Then copy your API key and past it in the terminal when asked.
