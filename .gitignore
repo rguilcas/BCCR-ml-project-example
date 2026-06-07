@@ -1,5 +1,6 @@
 outputs/*
 lightning_logs/*
 .vscode
+notebooks/*
 **/__pycache__/
 **.pyc
