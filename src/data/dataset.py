@@ -67,3 +67,21 @@ class AtmosphereToRainfallDataset(Dataset):
             y = self.transform_y(y)
         # return a dictionary with keys 'x' and 'y' containing the input features and target variable, respectively, as well as the index for potential debugging or analysis purposes.
         return {"x": x, "y": y, "idx": idx}
+    
+    def sel(self, time='2020-01-01'):
+        """
+        Determines how one sample is retrieved. Here we select the appropriate time step from the dataset and apply any transformations if specified.
+        """
+        # Convert xarray object to tensors.
+        x = torch.as_tensor(self.ds.predictors.sel(time=time).values, dtype=torch.float32)
+        y = torch.as_tensor(self.ds.targets.sel(time=time).values, dtype=torch.float32)
+        # Keep target as a 1D tensor of length 1 so batched targets are [B, 1].
+        if y.ndim == 0:
+            y = y.unsqueeze(0)
+        # Apply transformations if specified.
+        if self.transform_X:
+            x = self.transform_X(x)
+        if self.transform_y:
+            y = self.transform_y(y)
+        # return a dictionary with keys 'x' and 'y' containing the input features and target variable, respectively, as well as the index for potential debugging or analysis purposes.
+        return {"x": x, "y": y, "time": time}
