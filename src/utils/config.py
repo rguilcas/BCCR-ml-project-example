@@ -27,10 +27,7 @@ def _build_data_slice(times, years_split):
 	"""
 	ts = pd.to_datetime(times)
 	split = pd.Series("train", index=ts)
-
 	_, val_years, test_years = years_split
-	val_mask = (ts >= pd.Timestamp(val_years[0])) & (ts <= pd.Timestamp(val_years[1]))
-	test_mask = (ts >= pd.Timestamp(test_years[0])) & (ts <= pd.Timestamp(test_years[1]))
-	split.loc[val_mask] = "val"
-	split.loc[test_mask] = "test"
+	split[val_years[0]:val_years[1]] = "val"
+	split[test_years[0]:test_years[1]] = "test"
 	return split.to_numpy()
