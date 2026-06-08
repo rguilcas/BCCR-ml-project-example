@@ -2,58 +2,13 @@
 ## Setup your ML workflow
 ---
 
-This repository is an example machine learning project.
+This repository is an example machine learning project. 
+In this README, you will find how to setup the project, and how to train a neural network, and make predictions. 
 
 
-## Train the neural network and make predictions.
+# SETUP 
 
-First navigate to the scripts/ directory:
-
-```bash
-cd scripts
-```
-
-Then, launch the train.sh script:
-
-```bash
-bash train.sh
-```
-
-You can specify a configuration file in config/ with 
-
-```bash
-bash train.sh --config config-file-name
-```
-
-Weights and biases will give a run ID, which you can reuse for the predictions:
-
-```bash
-bash predict.sh --run-id run-id
-```
-
-
-## SETUP If running on HubroHub
-
-
-
-### 1) Install missing libraries
-
-If you are running this on HubroHub, you need to install lightning and wandb everytime you open a new session:
-
-```bash
-pip install wandb lightning
-```
-
-### 2) Setup weights and biases
-
-Once all libraries are installed, login to weights and biases to make sure experiments will get logged properly to your account.
-You will need a weights and biases account: [](https://wandb.ai/). Then copy your API key and past it in the terminal when asked.
-
-```bash
-wandb login
-```
-
-## SETUP If running elsewhere: Reproducible Environment (macOS, Linux, Windows)
+## SETUP If running on your computer
 
 This project uses a two-step setup:
 
@@ -98,6 +53,53 @@ You will need a weights and biases account. Then copy your API key and past it i
 
 ```bash
 wandb login
+```
+
+## SETUP If running on HubroHub
+
+### 1) Install missing libraries
+
+If you are running this on HubroHub, you need to install lightning and wandb everytime you open a new session:
+
+```bash
+pip install wandb lightning
+```
+
+### 2) Setup weights and biases
+
+Once all libraries are installed, login to weights and biases to make sure experiments will get logged properly to your account.
+You will need a weights and biases account: [](https://wandb.ai/). Then copy your API key and past it in the terminal when asked.
+
+```bash
+wandb login
+```
+
+
+
+# Train the neural network and make predictions.
+
+First navigate to the scripts/ directory:
+
+```bash
+cd scripts
+```
+
+Then, launch the train.sh script:
+
+```bash
+bash train.sh
+```
+
+You can specify a configuration file in config/ with 
+
+```bash
+bash train.sh --config config-file-name
+```
+
+Weights and biases will give a run ID, which you can reuse for the predictions:
+
+```bash
+bash predict.sh --run-id RUNID
 ```
 
 
