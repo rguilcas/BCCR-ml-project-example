@@ -96,7 +96,10 @@ You can specify a configuration file in config/ with
 bash train.sh --config config-file-name
 ```
 
-Weights and biases will give a run ID, which you can reuse for the predictions:
+Weights and biases will give a run ID, which you can reuse for the predictions.
+The run ID can be found in the terminal output, e.g.
+
+`wandb: 🚀 View run baseline at: https://wandb.ai/[wandb long user name]/bccr-ml-course/runs/`**RUNID**
 
 ```bash
 bash predict.sh --run-id RUNID
