@@ -5,7 +5,7 @@
 
 
 model:
-  model_name: TwoHiddenLayerMLP   # Can be TwoLayerMLP, ThreeLayerMLP or TwoLayerCNN 
+  model_name: TwoHiddenLayerMLP   # Can be TwoHiddenLayerMLP, OneHiddenLayerMLP or TwoLayerCNN 
   hidden_size_mlp: 32             # Number of neurons in the hidden layer for MLP models.
   # CNN only
   input_channels: 1               # Number of input variables. We only have 1 in the file we are using.
